@@ -1,21 +1,19 @@
 use std::io;
 
 fn main() {
-    let mut n_fibo = String::new();
-    let mut n_fibo_num: u32 = 0;
-    loop {
+    let n_fibo: u32 = loop {
         println!("Enter a positive number. That Fibonacci number will be printed.");
+        let mut input = String::new();
         io::stdin()
-            .read_line(&mut n_fibo)
+            .read_line(&mut input)
             .expect("Failed to read line!");
-        n_fibo = n_fibo.trim().to_string();
-        n_fibo_num = match n_fibo.parse() {
+        let input = match input.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };
-        break;
-    }
-    let result = fibo(n_fibo_num);
+        break input;
+    };
+    let result = fibo(n_fibo);
     println!("The {}th Fibonacci number is {}", n_fibo, result);
 }
 
@@ -32,9 +30,8 @@ fn fibo(n: u32) -> u64 {
     let mut two_back: u64 = first;
     let mut one_back: u64 = second;
     let mut result: u64 = 0;
-    let mut temp: u64 = 0;
-    for step in 2..n {
-        temp = two_back + one_back;
+    for _ in 2..n {
+        let temp: u64 = two_back + one_back;
         two_back = one_back;
         one_back = temp;
         result = temp;
