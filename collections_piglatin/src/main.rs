@@ -8,7 +8,18 @@ fn main() {
     let word_bounds = [' ', '\t', '\n', '.', ',', '?', '!', ':', ';',
                        '"', '\'', '/', '(', ')', '|', '\\'];
     let sentence = get_sentence();
-    println!("Your sentence is \"{}\".", sentence);
+    println!("Here are the individual words:");
+    let mut word = String::new();
+    for c in sentence.chars() {
+        if word_bounds.contains(&c) {
+            if word.len() != 0 {
+                println!("{}", word);
+            }
+            word = "".to_string();
+        } else {
+            word.push(c);
+        };
+    }
 }
 
 fn get_sentence() -> String {
