@@ -1,26 +1,54 @@
 use std::io;
 
+struct Letters {
+    vowels: [char; 6],
+    consonants: [char; 20],
+    word_bounds: [char; 16],
+}
+
 fn main() {
-    let vowels = ['a', 'e', 'i', 'o', 'u'];
-    let consonants = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k',
-                      'l', 'm', 'n', 'p', 'q', 'r', 's', 't',
-                      'v', 'w', 'x', 'y', 'z'];
-    let word_bounds = [' ', '\t', '\n', '.', ',', '?', '!', ':', ';',
-                       '"', '\'', '/', '(', ')', '|', '\\'];
+    let letters = get_letters();
     let sentence = get_sentence();
-    println!("Here are the individual words:");
+    let mut words = Vec::new();
     let mut word = String::new();
-    for c in sentence.chars() {
-        if word_bounds.contains(&c) {
-            if word.len() != 0 {
-                println!("{}", word);
+    for (i, c) in sentence.chars().enumerate() {
+        let word_length = word.len();
+        if letters.word_bounds.contains(&c) {
+            if word_length != 0 {
+                words.push(word)
+            }
+            word = "".to_string();
+        } else if i == sentence.len() - 1 {
+            word.push(c);
+            if word_length != 0 {
+                words.push(word)
             }
             word = "".to_string();
         } else {
             word.push(c);
         };
     }
+    let mut output_sentence = String::new();
+    for word in &words {
+        let new_word = piglatin_word(word);
+        output_sentence.push_str(&new_word);
+        output_sentence.push_str(" ");
+    }
+    println!("{}", output_sentence);
 }
+
+fn get_letters() -> Letters {
+    let letters = Letters {
+        vowels: ['a', 'e', 'i', 'o', 'u', 'y'],
+        consonants: ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k',
+                     'l', 'm', 'n', 'p', 'q', 'r', 's', 't',
+                     'v', 'w', 'x', 'z'],
+        word_bounds: [' ', '\t', '\n', '.', ',', '?', '!', ':', ';',
+                      '"', '\'', '/', '(', ')', '|', '\\'],
+    };
+    return letters;
+}
+
 
 fn get_sentence() -> String {
     let sentence = loop {
@@ -37,4 +65,29 @@ fn get_sentence() -> String {
         break input;
     };
     return sentence;
+}
+
+fn piglatin_word(word: &String) -> String { 
+    let letters = get_letters();
+    let mut new_word = String::new();
+    for (i, c) in word.chars().enumerate() {
+        if letters.vowels.contains(&c) {
+            if i == 0 {
+                new_word.push_str(word);
+                new_word.push_str("-hay");
+                return new_word;
+                // println!("{}-hay", word);
+                // break;
+            } else {
+                new_word.push_str(&word[i..]);
+                new_word.push_str("-");
+                new_word.push_str(&word[..i]);
+                new_word.push_str("ay");
+                return new_word;
+                // println!("{}", new_word);
+                // break;
+            }
+        }
+    }
+    return "".to_string();
 }
