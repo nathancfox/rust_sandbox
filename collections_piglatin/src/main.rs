@@ -2,8 +2,12 @@ use std::io;
 
 struct Letters {
     vowels: [char; 6],
-    consonants: [char; 20],
     word_bounds: [char; 16],
+}
+
+enum Element {
+    Word: String,
+    Separator: String,
 }
 
 fn main() {
@@ -15,7 +19,7 @@ fn main() {
         let word_length = word.len();
         if letters.word_bounds.contains(&c) {
             if word_length != 0 {
-                words.push(word)
+                words.push(Element::Word(word))
             }
             word = "".to_string();
         } else if i == sentence.len() - 1 {
@@ -40,9 +44,6 @@ fn main() {
 fn get_letters() -> Letters {
     let letters = Letters {
         vowels: ['a', 'e', 'i', 'o', 'u', 'y'],
-        consonants: ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k',
-                     'l', 'm', 'n', 'p', 'q', 'r', 's', 't',
-                     'v', 'w', 'x', 'z'],
         word_bounds: [' ', '\t', '\n', '.', ',', '?', '!', ':', ';',
                       '"', '\'', '/', '(', ')', '|', '\\'],
     };
@@ -55,7 +56,7 @@ fn get_sentence() -> String {
         println!("Enter your sentence.");
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
-            Ok(bytes) => (),
+            Ok(_) => (),
             Err(_) => {
                 println!("Something went wrong. Try again.");
                 continue;
