@@ -1,0 +1,18 @@
+Data Structure:
+    HashMap. Keys are department names, all lowercase.
+    Values are Vectors of employee names, input case preserved.
+    Vectors should always be sorted alphabetically upon new input.
+
+Prompt command:
+    -> "show {DEPARTMENTS,all}", retrieve hash map.
+       For every department in the list: DEPARTMENTS, print the
+       department name in "Title Case", followed by the employee
+       names in alphabetical order (they're presorted).
+    -> "Add NAME to DEPARTMENT", insert the employee
+       into the data structure.
+    -> "quit", quit.
+
+Extra Credit:
+    -> "undo", remove the last employee added. Only possible once before adding
+       new employees. Not persistent across sessions.
+    -> Persistence across sessions.
