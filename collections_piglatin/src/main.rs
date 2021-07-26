@@ -1,13 +1,14 @@
 use std::io;
 
 struct Letters {
-    vowels: [char; 6],
+    vowels: [char; 12],
     word_bounds: [char; 16],
 }
 
+#[derive(Debug)]
 enum Element {
-    Word: String,
-    Separator: String,
+    Word(String),
+    Separator(String),
 }
 
 fn main() {
@@ -19,13 +20,14 @@ fn main() {
         let word_length = word.len();
         if letters.word_bounds.contains(&c) {
             if word_length != 0 {
-                words.push(Element::Word(word))
+                words.push(Element::Word(word));
             }
+            words.push(Element::Separator(c.to_string()));
             word = "".to_string();
         } else if i == sentence.len() - 1 {
             word.push(c);
             if word_length != 0 {
-                words.push(word)
+                words.push(Element::Word(word))
             }
             word = "".to_string();
         } else {
@@ -34,16 +36,20 @@ fn main() {
     }
     let mut output_sentence = String::new();
     for word in &words {
-        let new_word = piglatin_word(word);
+        let new_word = match word {
+            Element::Word(string) => piglatin_word(string),
+            Element::Separator(string) => string.to_string(),
+        };
+        // println!("{:?}", new_word);
         output_sentence.push_str(&new_word);
-        output_sentence.push_str(" ");
     }
     println!("{}", output_sentence);
 }
 
 fn get_letters() -> Letters {
     let letters = Letters {
-        vowels: ['a', 'e', 'i', 'o', 'u', 'y'],
+        vowels: ['a', 'e', 'i', 'o', 'u', 'y',
+                 'A', 'E', 'I', 'O', 'U', 'Y'],
         word_bounds: [' ', '\t', '\n', '.', ',', '?', '!', ':', ';',
                       '"', '\'', '/', '(', ')', '|', '\\'],
     };
