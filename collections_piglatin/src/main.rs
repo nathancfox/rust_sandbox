@@ -5,7 +5,6 @@ struct Letters {
     word_bounds: [char; 16],
 }
 
-#[derive(Debug)]
 enum Element {
     Word(String),
     Separator(String),
@@ -40,7 +39,6 @@ fn main() {
             Element::Word(string) => piglatin_word(string),
             Element::Separator(string) => string.to_string(),
         };
-        // println!("{:?}", new_word);
         output_sentence.push_str(&new_word);
     }
     println!("{}", output_sentence);
