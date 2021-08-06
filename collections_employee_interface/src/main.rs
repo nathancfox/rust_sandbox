@@ -13,7 +13,7 @@ fn main() {
         }
         match split_command[0] {
             "add" => add_employee(split_command, &mut database),
-            "show" => show_department(split_command, &database),
+            // "show" => show_department(split_command, &database),
             "commands" => print_valid_commands(),
             "quit" => break,
             _ => {
@@ -41,7 +41,7 @@ fn get_sentence() -> String {
     return sentence;
 }
 
-fn add_employee(split_command: Vec<&str>, database: &mut HashMap<String, String>) {
+fn add_employee(split_command: Vec<&str>, database: &mut HashMap<String, Vec<&String>>) {
     let mut split_index = 0;
     let split_index_ref = &mut split_index;
     for (i, word) in split_command.iter().enumerate() {
@@ -52,16 +52,26 @@ fn add_employee(split_command: Vec<&str>, database: &mut HashMap<String, String>
     }
     let name = split_command[1..split_index].join(" ");
     let department = split_command[split_index+1..].join(" ");
-    database.insert(department, name);
+    database.entry(department).or_insert(Vec::<&String>::new());
+    let employees = match database.get(&department) {
+        Some(employees) => Some(*employees),
+        None => None,
+    };
+    let mut employees = employees.unwrap_or(Vec::<&String>::new());
+    employees.push(&name);
+    employees.sort();
+    employees.dedup();
+    database.insert(department, employees);
 }
 
-fn show_department(split_command: Vec<&str>, database: &HashMap<String, String>) {
+fn show_department(split_command: Vec<&str>, database: &HashMap<String, Vec<&String>>) {
     let department = split_command[1..].join(" ");
-    let employee = match database.get(&department) {
-        Some(name) => name,
-        None => "",
+    let employees = match database.get(&department) {
+        Some(employees) => Some(*employees),
+        None => None,
     };
-    println!("The employee in this department is {}", employee);
+    let mut employees = employees.unwrap_or(Vec::<&String>::new());
+    println!("The employee in this department is {}", employees.join(", "));
 }
 
 fn print_valid_commands() {
